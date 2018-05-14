@@ -11,6 +11,7 @@
         <module>source</module>
         <module>processor</module>
         <module>another-processor</module>
+        <module>spark-processor</module>
         <!--<module>monitor-service</module>-->
     </modules>
 

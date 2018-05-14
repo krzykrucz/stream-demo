@@ -9,21 +9,35 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.Random;
+import java.util.stream.Collectors;
+
 @SpringBootApplication
 @EnableBinding(Source.class)
 @EnableScheduling
 public class SourceApplication {
 
+    private static final Random random = new Random();
+    private final Source source;
+
     @Autowired
-    Source source;
+    public SourceApplication(Source source) {
+        this.source = source;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(SourceApplication.class, args);
     }
 
-    @Scheduled(fixedRate = 1000)
-    void send() {
-        source.output()
-                .send(MessageBuilder.withPayload("text").build());
+    private static String generateRandomText() {
+        return random
+                .ints(random.nextInt(1000), 'a', 'z' + 1)
+                .mapToObj(x -> String.valueOf((char) x))
+                .collect(Collectors.joining(" "));
+    }
+
+    @Scheduled(fixedRate = 100)
+    private void send() {
+        source.output().send(MessageBuilder.withPayload(generateRandomText()).build());
     }
 }
