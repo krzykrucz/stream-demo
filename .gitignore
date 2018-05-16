@@ -1,5 +1,6 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+FlinkProcessor/target
 
 ### STS ###
 .apt_generated
