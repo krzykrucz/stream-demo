@@ -151,7 +151,7 @@ under the License.
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>pl.edu.agh.StreamingJob</mainClass>
+                                    <mainClass>pl.edu.agh.WordsCountingProcessorApplication</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

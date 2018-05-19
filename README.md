@@ -10,4 +10,17 @@ cd kafka-docker
 docker-compose --file docker-compose-single-broker.yml  up -d
 ```
 
-potem trzeba odpalić źródło, zlew i wybrany procesor
+potem trzeba odpalić źródło, zlew i wybrany procesor. Można się posłużyć skryptem `manager.sh`
+
+```sh
+./manager.sh start source
+./manager.sh start sink
+./manager.sh start spark
+#...
+./manager.sh stop spark
+./manager.sh start flink
+#...
+./mangager.sh stop flink
+./mangager.sh stop sink
+./mangager.sh stop source
+```
