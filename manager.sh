@@ -1,10 +1,10 @@
 #!/bin/sh
 
-run_spark='BROKERS="localhost:9092" TOPICS="my-source" mvn install exec:java -pl spark-processor' # '-pl spark-processor' pozwala z katalogu głównego zawołać moduł sparkowu
-#TODO: uzupełnić komendy:
-run_source='echo Uruchamiam źródło && sleep 3 && echo xd'
-run_sink='echo Uruchamiam zlew'
-run_flink='echo uruchamiam flinka'
+# końcówka '-pl <nazwa-modułu>' pozwala z katalogu głównego projektu zawołać zadany moduł
+run_spark='BROKERS="localhost:9092" TOPICS="my-source" mvn install exec:java -pl spark-processor'
+run_source='mvn spring-boot:run -pl source'
+run_sink='mvn spring-boot:run -pl sink'
+run_flink='mvn spring-boot:run -pl flink-processor'
 
 print_help(){
     echo "$0 (start|stop) (source|sink|spark|flink)"
