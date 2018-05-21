@@ -19,12 +19,11 @@ run_command(){
     if [ -f /tmp/"$1" ]; then
         if ps -p $(cat /tmp/"$1") > /dev/null 
         then
-            echo "Już uruchomione! Najpierw zastopuj"
-            exit 2
+            echo "Program już jest uruchomiony. Odpalam kolejną instancę"
         fi # else process was terminated some other way and we didn't notice
     fi
     sh -c "$1" &
-    echo $! > /tmp/"$1" # save PID
+    echo $! >> /tmp/"$1" # save PID
 }
 
 kill_command(){
@@ -32,7 +31,7 @@ kill_command(){
         echo "Proces już nie żyje"
         exit 7
     fi
-    pkill -P $(cat /tmp/"$1") # that file contains PID
+    while read pid; do pkill -P $pid; done </tmp/"$1" # that file contains PIDs
     rm /tmp/"$1"
 }
 
