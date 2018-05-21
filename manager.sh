@@ -5,9 +5,10 @@ run_spark='BROKERS="localhost:9092" TOPICS="my-source" mvn install exec:java -pl
 run_source='mvn spring-boot:run -pl source'
 run_sink='mvn spring-boot:run -pl sink'
 run_flink='mvn spring-boot:run -pl flink-processor'
+run_kafkastreams='mvn spring-boot:run -pl kafkastreamsprocessor'
 
 print_help(){
-    echo "$0 (start|stop) (source|sink|spark|flink)"
+    echo "$0 (start|stop) (source|sink|spark|flink|kafkastreams)"
 }
 
 if [ "$#" -lt 2 ]; then
@@ -44,6 +45,8 @@ get_command(){
         cmd="$run_spark"
     elif [ "$1" = 'flink' ]; then
         cmd="$run_flink"
+    elif [ "$1" = 'kafkastreams' ]; then
+        cmd="$run_kafkastreams"
     else
         print_help
         exit 3

@@ -13,6 +13,7 @@
         <module>another-processor</module>
         <module>spark-processor</module>
         <module>flink-processor</module>
+        <module>kafkastreamsprocessor</module>
         <!--<module>monitor-service</module>-->
     </modules>
 
