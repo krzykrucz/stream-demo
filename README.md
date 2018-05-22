@@ -24,3 +24,11 @@ potem trzeba odpalić źródło, zlew i wybrany procesor. Można się posłuży�
 ./mangager.sh stop sink
 ./mangager.sh stop source
 ```
+
+Graf jest wzięty z
+https://github.com/perrygeo/pi_sensor_realtime
+żeby odpalić potrzeba websocketd http://websocketd.com/
+```
+$ ./runGraph.sh
+```
+i w przeglądarce graf.html
