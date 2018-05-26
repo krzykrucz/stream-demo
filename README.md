@@ -28,7 +28,11 @@ potem trzeba odpalić źródło, zlew i wybrany procesor. Można się posłuży�
 Graf jest wzięty z
 https://github.com/perrygeo/pi_sensor_realtime
 żeby odpalić potrzeba websocketd http://websocketd.com/
+Po odpaleniu źródła, zlewu i procesora można zrobić
 ```
-$ ./runGraph.sh
+$ ./manager.sh start websocket
+...
+$ ./manager.sh stop websocket
 ```
-i w przeglądarce graf.html
+Przeglądarka internetowa powinna otworzyć się automatycznie. Jeśli tak się nie stanie, należy otworzyć *graf.html*.
+

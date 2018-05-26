@@ -6,9 +6,10 @@ run_source='mvn spring-boot:run -pl source'
 run_sink='mvn spring-boot:run -pl sink'
 run_flink='mvn spring-boot:run -pl flink-processor'
 run_kafkastreams='mvn spring-boot:run -pl kafkastreamsprocessor'
+run_websocket='xdg-open graf.html; websocketd --port=8080 tail -f results.txt'
 
 print_help(){
-    echo "$0 (start|stop) (source|sink|spark|flink|kafkastreams)"
+    echo "$0 (start|stop) (source|sink|spark|flink|kafkastreams|websocket)"
 }
 
 if [ "$#" -lt 2 ]; then
@@ -47,6 +48,8 @@ get_command(){
         cmd="$run_flink"
     elif [ "$1" = 'kafkastreams' ]; then
         cmd="$run_kafkastreams"
+    elif [ "$1" = 'websocket' ]; then
+        cmd="$run_websocket"
     else
         print_help
         exit 3

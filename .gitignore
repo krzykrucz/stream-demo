@@ -1,6 +1,7 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 FlinkProcessor/target
+results.txt
 
 ### STS ###
 .apt_generated
@@ -24,3 +25,4 @@ FlinkProcessor/target
 /dist/
 /nbdist/
 /.nb-gradle/
+

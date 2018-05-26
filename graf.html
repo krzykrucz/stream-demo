@@ -10,8 +10,8 @@
       function createTimeline() {
         var chart = new SmoothieChart({
           interpolation:'bezier',
-            minValue:0.0
-          //maxValue:120
+            minValue:0.0,
+            maxValue:100 //TU JESt WAŻNY PARAMETR. USUNIĘCIE GO SPRAWIA ŻE MAKSYMALNA WARTOŚĆ SIĘ DOSTOSOWUJE
         });
         chart.addTimeSeries(readings, { 
             strokeStyle: 'rgba(0, 255, 0, 0.6)',
@@ -28,8 +28,9 @@
       };
       ws.onmessage = function(event) {
         var data = event.data.split(",");
-        var timestamp = parseFloat(data[0]) / 1000 / 1000;  // expects ns
+        var timestamp = parseFloat(data[0]);  // timestamp is in ms
           var value = parseFloat(data[1]);
+          console.log( timestamp+ " - " + value);
         readings.append(timestamp, value);
       };
     </script>
