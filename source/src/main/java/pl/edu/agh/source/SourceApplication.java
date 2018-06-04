@@ -36,8 +36,17 @@ public class SourceApplication {
                 .collect(Collectors.joining(" "));
     }
 
-    @Scheduled(fixedRate = 100)
+    private static String generateRandomNumbers() {
+        double d = -1000 + 2000 * random.nextDouble();
+        System.out.println("Sending " +d);
+        return d+"";
+    }
+
+    @Scheduled(fixedRate = 1)
     private void send() {
-        source.output().send(MessageBuilder.withPayload(generateRandomText()).build());
+        source.output().send(MessageBuilder.withPayload(
+//                generateRandomText()
+                generateRandomNumbers()
+        ).build());
     }
 }

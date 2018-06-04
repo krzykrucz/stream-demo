@@ -10,8 +10,8 @@
       function createTimeline() {
         var chart = new SmoothieChart({
           interpolation:'bezier',
-            minValue:0.0,
-            maxValue:100 //TU JESt WAŻNY PARAMETR. USUNIĘCIE GO SPRAWIA ŻE MAKSYMALNA WARTOŚĆ SIĘ DOSTOSOWUJE
+            minValue:0.0 //,
+            //maxValue:100 //TU JESt WAŻNY PARAMETR. USUNIĘCIE GO SPRAWIA ŻE MAKSYMALNA WARTOŚĆ SIĘ DOSTOSOWUJE
         });
         chart.addTimeSeries(readings, { 
             strokeStyle: 'rgba(0, 255, 0, 0.6)',

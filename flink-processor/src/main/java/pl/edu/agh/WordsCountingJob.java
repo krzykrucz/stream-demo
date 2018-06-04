@@ -19,7 +19,8 @@ public class WordsCountingJob {
 
         env.addSource(new FlinkKafkaConsumer011<String>(
                 "my-source", new SimpleStringSchema(), properties))
-                .map(new WordsCounter())
+                //.map(new WordsCounter())
+                .map(new LinearRegression())
                 .addSink(new FlinkKafkaProducer011<String>(
                         "localhost:9092",      // Kafka broker host:port
                         "my-proc",       // Topic to write to
