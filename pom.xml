@@ -9,7 +9,6 @@
     <modules>
         <module>sink</module>
         <module>source</module>
-        <module>processor</module>
         <module>spark-processor</module>
         <module>flink-processor</module>
         <module>kafkastreamsprocessor</module>
