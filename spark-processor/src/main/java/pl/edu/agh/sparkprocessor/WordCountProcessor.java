@@ -11,6 +11,7 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -28,15 +29,28 @@ public class WordCountProcessor {
     private static final String RESULT_TOPIC = "my-proc";
     private static final Duration BATCH_DURATION = Durations.seconds(5);
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws InterruptedException {
         final String brokers = getEnvOrExitWithError("BROKERS");
         final String topics = getEnvOrExitWithError("TOPICS");
 
         final JavaStreamingContext jssc = setupSpark("WordCountProcessor");
         final JavaInputDStream<ConsumerRecord<String, String>> messages = createKafkaMessageStream(jssc, brokers, topics);
 
+        final Map<String, Object> kafkaParams = new HashMap<>();
+        kafkaParams.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
+        kafkaParams.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        kafkaParams.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
-        final JavaPairDStream<String, Integer> wordCounts = messages
+        //wordCount(brokers, messages. kafkaParams);
+        linearRegression(brokers, messages, kafkaParams);
+
+        jssc.start();
+        jssc.awaitTermination();
+    }
+
+	private static void wordCount(final String brokers,
+			final JavaInputDStream<ConsumerRecord<String, String>> messages, final Map<String, Object> kafkaParams) {
+		final JavaPairDStream<String, Integer> wordCounts = messages
                 .map(ConsumerRecord::value)
                 .flatMap(x -> Arrays.asList(x.split("\\s+")).iterator())
                 .mapToPair(s -> new Tuple2<>(s, 1))
@@ -46,24 +60,38 @@ public class WordCountProcessor {
             String resultMessage = new ObjectMapper().writeValueAsString(rdd.collectAsMap());
             System.out.println(resultMessage);
 
-            final Map<String, Object> kafkaParams = new HashMap<>();
-            kafkaParams.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
-            kafkaParams.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-            kafkaParams.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-
             KafkaProducer<String, String> producer = new KafkaProducer<>(kafkaParams);
 
             producer.send(new ProducerRecord<>(RESULT_TOPIC, resultMessage));
             producer.close();
-
         });
+	}
+	
+	private static void linearRegression(final String brokers,
+			final JavaInputDStream<ConsumerRecord<String, String>> messages, final Map<String, Object> kafkaParams) {
+		
+		final JavaDStream<String> numberCounts = messages
+				.map(ConsumerRecord::value).flatMap(x -> Arrays.asList(x).iterator());
+		
+		numberCounts.foreachRDD(rdd -> {
+			List<String> numbers = rdd.collect();
+			for(String number : numbers)
+			{
+                pl.edu.agh.sparkprocessor.LinearRegression.addNum(Double.parseDouble(number));
+                String resultMessage = pl.edu.agh.sparkprocessor.LinearRegression.regression();
 
-        jssc.start();
-        jssc.awaitTermination();
-    }
+                KafkaProducer<String, String> producer = new KafkaProducer<>(kafkaParams);
+                producer.send(new ProducerRecord<>(RESULT_TOPIC, resultMessage));
+                producer.close();
+            }
+		});	
+	}
+	
 
     private static String getEnvOrExitWithError(String name) {
-        final String env = System.getenv(name);
+        String env = System.getenv(name);
+        if(name.equals("BROKERS")) env = "localhost:9092";
+        else env = "my-source";
         if (env == null) {
             System.err.println("\"" + name + "\" env must be provided");
             System.exit(1);
